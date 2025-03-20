@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, Suspense } from "react"
 import { usePathname, useSearchParams } from "next/navigation"
 
 export function Analytics() {
@@ -26,3 +26,10 @@ export function Analytics() {
   return null
 }
 
+export default function AnalyticsWrapper() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Analytics />
+    </Suspense>
+  )
+}
