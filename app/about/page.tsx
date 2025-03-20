@@ -1,4 +1,9 @@
-export default function AboutPage() {
+"use client"
+
+import { Suspense } from "react"
+
+// Example component that might use useSearchParams in the future
+function AboutContent() {
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <h1 className="text-3xl font-bold mb-6">About NaijaSpark Quiz</h1>
@@ -44,3 +49,10 @@ export default function AboutPage() {
   )
 }
 
+export default function AboutPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AboutContent />
+    </Suspense>
+  )
+}
