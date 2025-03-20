@@ -1,4 +1,4 @@
-// app/api/og/route.ts
+/** @jsxImportSource react */
 import { ImageResponse } from 'next/server'
 
 export const config = {
