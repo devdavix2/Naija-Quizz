@@ -1,15 +1,16 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, Suspense } from "react"
 import { useParams, useRouter } from "next/navigation"
 import QuizInterface from "@/components/quiz-interface"
 import { useStore } from "@/lib/store"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Card, CardContent } from "@/components/ui/card"
 
-export default function QuizPage() {
+function QuizContent() {
   const router = useRouter()
-  const { category } = useParams() as { category: string }
+  const params = useParams()
+  const category = params?.category as string
 
   // Get quiz data from store
   const getQuizById = useStore((state) => state.getQuizById)
@@ -52,6 +53,35 @@ export default function QuizPage() {
         <QuizInterface quiz={quiz} />
       </div>
     </div>
+  )
+}
+
+export default function QuizPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-gradient-to-b from-green-50 to-green-100 dark:from-green-950 dark:to-green-900">
+          <div className="container mx-auto px-4 py-8">
+            <Card>
+              <CardContent className="p-8">
+                <div className="space-y-4">
+                  <Skeleton className="h-8 w-3/4 mx-auto" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-2/3" />
+                  <div className="flex justify-between pt-4">
+                    <Skeleton className="h-10 w-24" />
+                    <Skeleton className="h-10 w-24" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      }
+    >
+      <QuizContent />
+    </Suspense>
   )
 }
 

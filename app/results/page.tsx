@@ -1,15 +1,15 @@
 "use client"
 
-import { useEffect } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useEffect, Suspense } from "react"
+import { useRouter } from "next/navigation"
 import ResultsDisplay from "@/components/results-display"
 import { useStore } from "@/lib/store"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Card, CardContent } from "@/components/ui/card"
 
-export default function ResultsPage() {
+function ResultsContent() {
   const router = useRouter()
-  const searchParams = useSearchParams()
+  const searchParams = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "")
 
   // Get query parameters
   const quizId = searchParams?.get("quizId") || ""
@@ -62,6 +62,36 @@ export default function ResultsPage() {
         <ResultsDisplay quiz={quiz} score={score} total={total} percentage={percentage} language={language} />
       </div>
     </div>
+  )
+}
+
+export default function ResultsPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-gradient-to-b from-green-50 to-green-100 dark:from-green-950 dark:to-green-900">
+          <div className="container mx-auto px-4 py-8">
+            <Card>
+              <CardContent className="p-8">
+                <div className="space-y-4">
+                  <Skeleton className="h-8 w-3/4 mx-auto" />
+                  <Skeleton className="h-20 w-20 rounded-full mx-auto" />
+                  <Skeleton className="h-12 w-1/3 mx-auto" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-full" />
+                  <div className="flex justify-between pt-4">
+                    <Skeleton className="h-10 w-24" />
+                    <Skeleton className="h-10 w-24" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      }
+    >
+      <ResultsContent />
+    </Suspense>
   )
 }
 

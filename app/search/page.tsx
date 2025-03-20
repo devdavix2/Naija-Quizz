@@ -2,8 +2,8 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useState, useEffect, Suspense } from "react"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { ArrowLeft, ArrowRight, Search, Filter } from "lucide-react"
@@ -17,14 +17,10 @@ import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import type { Quiz } from "@/types/app-types"
 
-export default function SearchPage() {
+// Separate component that uses useSearchParams
+function SearchContent() {
   const router = useRouter()
-  const searchParams = useSearchParams()
-
-  // Get initial search query from URL
-  const initialQuery = searchParams?.get("q") || ""
-
-  const [searchQuery, setSearchQuery] = useState(initialQuery)
+  const [searchQuery, setSearchQuery] = useState("")
   const [filteredQuizzes, setFilteredQuizzes] = useState<Quiz[]>([])
   const [showFilters, setShowFilters] = useState(false)
 
@@ -36,6 +32,17 @@ export default function SearchPage() {
 
   // Get unique categories
   const categories = Array.from(new Set(quizData.map((quiz) => quiz.category)))
+
+  // Initialize with URL params if available
+  useEffect(() => {
+    // Get URL search params
+    const params = new URLSearchParams(window.location.search)
+    const queryParam = params.get("q")
+
+    if (queryParam) {
+      setSearchQuery(queryParam)
+    }
+  }, [])
 
   // Filter quizzes based on search query and filters
   useEffect(() => {
@@ -274,6 +281,27 @@ export default function SearchPage() {
         )}
       </div>
     </div>
+  )
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-green-50 to-green-100 dark:from-green-950 dark:to-green-900 p-4">
+          <Card className="w-full max-w-md">
+            <CardHeader className="text-center">
+              <CardTitle className="text-2xl">Loading...</CardTitle>
+            </CardHeader>
+            <CardContent className="text-center">
+              <p className="text-gray-600 dark:text-gray-300">Please wait while we load search results...</p>
+            </CardContent>
+          </Card>
+        </div>
+      }
+    >
+      <SearchContent />
+    </Suspense>
   )
 }
 
