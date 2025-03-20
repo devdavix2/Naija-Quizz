@@ -1,12 +1,10 @@
 "use client"
 
 import { Suspense } from "react"
-import { usePathname, useSearchParams } from "next/navigation"
+import { usePathname } from "next/navigation"
 
-// Example component that might use useSearchParams
 function AboutContent() {
   const pathname = usePathname()
-  const searchParams = useSearchParams()
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">

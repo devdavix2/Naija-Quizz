@@ -1,15 +1,14 @@
 "use client"
 
 import { Suspense } from "react"
-import { usePathname, useSearchParams } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { FileQuestion } from "lucide-react"
 
-// Separate component that uses useSearchParams
 function NotFoundContent() {
   const pathname = usePathname()
-  const searchParams = useSearchParams()
+  const router = useRouter()
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-green-50 to-green-100 dark:from-green-950 dark:to-green-900 p-4">
